@@ -1,2 +1,2 @@
 # USACO-Training 
-Solutions to the Training Pages and Past Contests in Java. 
+My Solutions to the Training Pages and Past Contests in Java. 
