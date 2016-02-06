@@ -7,12 +7,10 @@ TASK: frac1
 package chapter2.sec1;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class frac1 {
-
-    private static ArrayList<Fraction> fractions;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("frac1.in"));
@@ -20,96 +18,40 @@ public class frac1 {
 
         final int N = Integer.parseInt(br.readLine());
 
-        fractions = new ArrayList<Fraction>();
+        Set<Fraction> set = new TreeSet<Fraction>();
 
-        for (int i = 1; i <= N; i++) generate(i);
+        for (int d = 1; d <= N; d++)
+            for (int n = 0; n <= d; n++)
+                set.add(new Fraction(n, d));
 
-        fractions.add(new Fraction(0, 1));
-        fractions.add(new Fraction(1, 1));
 
-        Collections.sort(fractions);
+        for (Fraction f : set)
+            pw.println(f.n + "/" + f.d);
 
-        for (Fraction f : fractions)
-            pw.println(f);
 
         pw.close();
     }
 
-    private static void generate(int num) {
-
-        for (int i = 1; i < num; i++) {
-            Fraction frac = new Fraction(i, num);
-
-            if (simplifiable(frac))
-                simplify(frac);
-
-            if (! fractions.contains(frac))
-                fractions.add(frac);
-
-        }
-
-    }
-
-    private static boolean simplifiable(Fraction f) {
-        return gcd(f.numer, f.denom) != 1;
-    }
-
-    private static void simplify(Fraction f) {
-        int n = f.numer;
-        int d = f.denom;
-        f.denom /= gcd(n, d);
-        f.numer /= gcd(n, d);
-    }
-
-    private static int gcd(int i, int j) {
-        return (j == 0) ? i : gcd(j, i % j);
-    }
-
     private static class Fraction implements Comparable<Fraction> {
 
-        private int numer, denom;
+        private final int n, d;
         private final double value;
 
-        protected Fraction(int numer, int denom) {
-            this.numer = numer;
-            this.denom = denom;
-            this.value = (double) numer / (double) denom;
+        protected Fraction(int n, int d) {
+            int com = gcd(n, d);
+
+            this.n = n / com;
+            this.d = d / com;
+            this.value = n / (double) d;
+        }
+
+        private static int gcd(int i, int j) {
+            return (j == 0) ? i : gcd(j, i % j);
         }
 
         @Override
         public int compareTo(Fraction f) {
-            if (value > f.value) return 1;
-            if (value < f.value) return - 1;
-            return 0;
-        }
-
-        @Override
-        public String toString() {
-            return this.numer + "/" + this.denom;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (! (o instanceof Fraction)) return false;
-
-            Fraction fraction = (Fraction) o;
-
-            return numer == fraction.numer &&
-                    denom == fraction.denom &&
-                    Double.compare(fraction.value, value) == 0;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result;
-            long temp;
-            result = numer;
-            result = 31 * result + denom;
-            temp = Double.doubleToLongBits(value);
-            result = 31 * result + (int) (temp ^ (temp >>> 32));
-            return result;
+            return Double.compare(value, f.value);
         }
 
     }

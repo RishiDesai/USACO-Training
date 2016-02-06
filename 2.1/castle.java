@@ -44,7 +44,7 @@ public class castle {
     }
 
     private static int M, N;
-    private static int[] sizes;                // idx -> room's ID, [idx] -> room size
+    private static int[] sizes;                // idx = room ID, [idx] -> room size
     private static int[][] map;
     private static boolean[][] visited;
     private static Module[][] mods;
@@ -154,12 +154,10 @@ public class castle {
                     int up = mods[i - 1][j].ID;
 
                     if (root != up) {
-
                         if (sizes[root] + sizes[up] > combinedRoom) {
                             combinedRoom = sizes[root] + sizes[up];
                             wall = (i + 1) + " " + (j + 1) + " " + 'N';
                         }
-
                     }
 
                 }
@@ -168,13 +166,12 @@ public class castle {
                     int rt = mods[i][j + 1].ID;
 
                     if (root != rt) {
-
                         if (sizes[root] + sizes[rt] > combinedRoom) {
                             combinedRoom = sizes[root] + sizes[rt];
                             wall = (i + 1) + " " + (j + 1) + " " + 'E';
                         }
-
                     }
+
                 }
 
             }
