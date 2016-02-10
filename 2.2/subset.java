@@ -24,16 +24,26 @@ public class subset {
             return;
         }
 
-        long[] dp = new long[sum + 1];
+        int goal = sum / 2;
 
-        dp[0] = 1;
-        for (int i = 1; i <= N; i++) {
-            for (int j = sum - i; j >= 0; j--) {
-                dp[i + j] += dp[j];
+        long[][] dp = new long[N + 1][goal + 1];
+
+        dp[1][1] = 1;
+        for (int i = 1; i <= N; i++) {     // going through all #s
+
+            dp[i][i] = 1;
+            for (int j = 1; j < i; j++) {  // adding subsets from previous #s
+
+                int max = j * (j + 1) / 2;
+                for (int k = 1; k <= max && k + i <= goal; k++) {
+                    dp[i][k + i] += dp[j][k];
+                } // dp[i][k + i] eg. you won't add 4 to dp[i][1]. only add 4 to [i][4..N]
+
             }
+
         }
 
-        long ans = dp[sum / 2] / 2;
+        long ans = dp[N][goal];
 
         pw.println(ans);
         pw.close();
