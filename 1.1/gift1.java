@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 public class gift1 {
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new FileReader("gift1.in"));
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("gift1.out")));
 
@@ -40,20 +39,20 @@ public class gift1 {
                 for (i = 0; i < people.length; i++)
                     if (people[i].name.equals(name)) break;
 
-                people[i].recieved += giver.each;
+                people[i].received += giver.each;
             }
 
         }
 
         for (String name : names) {
-            int ind;
-            for (ind = 0; ind < people.length; ind++)
-                if (name.equals(people[ind].name)) {
-                    people[ind].setDiff();
+            int i;
+            for (i = 0; i < people.length; i++)
+                if (name.equals(people[i].name)) {
+                    people[i].setDiff();
                     break;
                 }
 
-            pw.println(people[ind].name + " " + people[ind].diff);
+            pw.println(people[i].name + " " + people[i].diff);
         }
 
         pw.close();
@@ -62,7 +61,7 @@ public class gift1 {
     private static class Person {
 
         protected final int init, each;
-        protected int recieved, diff;
+        protected int received, diff;
         protected final String name;
         protected final String[] list;
 
@@ -71,17 +70,16 @@ public class gift1 {
             this.name = name;
             this.list = list;
             this.each = (list.length == 0) ? 0 : init / list.length;
-            this.recieved = (each == 0) ? init : init % list.length;
+            this.received = (each == 0) ? init : init % list.length;
         }
 
         protected void setDiff() {
-            this.diff = recieved - init;
+            this.diff = received - init;
         }
 
         @Override
         public String toString() {
-            return "[" + name + ": " + init +
-                    " : " + recieved + " ]";
+            return "[" + name + ": " + init + " : " + received + " ]";
         }
 
         @Override

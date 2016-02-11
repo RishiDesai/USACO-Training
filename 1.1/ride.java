@@ -11,39 +11,29 @@ public class ride {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("ride.in"));
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ride.out")));
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("ride.out")));
 
-        String comet = br.readLine();
-        String group = br.readLine();
+        final String comet = br.readLine();
+        final String group = br.readLine();
 
-        int cometSum = 1;
-        char[] ch = comet.toCharArray();
-        for (char c : ch) {
-            int temp = (int) c;
-            int temp_integer = 64;
-            if (temp <= 90 & temp >= 65) {
-                int letter = temp - temp_integer;
-                cometSum *= letter;
-            }
-        }
+        int cometNum = getNumber(comet);
+        int groupNum = getNumber(group);
 
-        int groupSum = 1;
-        char[] ch2 = group.toCharArray();
-        for (char s : ch2) {
-            int temp2 = (int) s;
-            int temp_integer2 = 64;
-            if (temp2 <= 90 & temp2 >= 65) {
-                int letter2 = temp2 - temp_integer2;
-                groupSum *= letter2;
-            }
-        }
+        if (cometNum == groupNum)
+            pw.println("GO");
+        else
+            pw.println("STAY");
 
-        if (groupSum % 47 == cometSum % 47) {
-            out.println("GO");
-        } else {
-            out.println("STAY");
-        }
-
-        out.close();
+        pw.close();
     }
+
+    private static int getNumber(final String str) {
+        int ret = 1;
+
+        for (int i = 0; i < str.length(); i++)
+            ret *= str.charAt(i) - 64;
+
+        return ret % 47;
+    }
+
 }

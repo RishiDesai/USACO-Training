@@ -7,69 +7,66 @@ TASK: friday
 package chapter1.sec1;
 
 import java.io.*;
-import java.util.StringTokenizer;
 
 public class friday {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("friday.in"));
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("friday.out")));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("friday.out")));
 
-        int N = Integer.parseInt(st.nextToken());
+        final int N = Integer.parseInt(br.readLine());
 
         int year = 1900 + N;
-        int[] thirteens = new int[7];
+        int[] wk = new int[7];
         int dayOfWeek = 6;
 
-        for (int i = 1900; i < year; i++) {
-            for (int k = 0; k <= 11; k++) {
-                int days = monthDays(i, k);
-                thirteens[dayOfWeek]++;
+        for (int y = 1900; y < year; y++) {
+            for (int m = 1; m <= 12; m++) {
+                wk[dayOfWeek]++;
+
+                int days = monthDays(y, m);
+
                 dayOfWeek += days;
                 dayOfWeek %= 7;
             }
         }
-        out.print(thirteens[6] + " ");
-        out.print(thirteens[0] + " ");
-        out.print(thirteens[1] + " ");
-        out.print(thirteens[2] + " ");
-        out.print(thirteens[3] + " ");
-        out.print(thirteens[4] + " ");
-        out.print(thirteens[5] + " ");
 
-        System.out.print(thirteens[6] + " ");
-        System.out.print(thirteens[0] + " ");
-        System.out.print(thirteens[1] + " ");
-        System.out.print(thirteens[2] + " ");
-        System.out.print(thirteens[3] + " ");
-        System.out.print(thirteens[4] + " ");
-        System.out.print(thirteens[5] + " ");
+        pw.print(
+                wk[6] + " " +
+                wk[0] + " " +
+                wk[1] + " " +
+                wk[2] + " " +
+                wk[3] + " " +
+                wk[4] + " " +
+                wk[5] + '\n'
+        );
+
+        pw.close();
     }
 
     public static int monthDays(int year, int month) {
         switch (month) {
-            case 0:
-            case 2:
-            case 4:
-            case 6:
-            case 7:
-            case 9:
-            case 11:
-                return 31;
             case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                return 31;
+            case 2:
                 if (year % 4 == 0 && year != 2100 && year != 1900 && year != 2200) {
                     return 29;
                 } else {
                     return 28;
                 }
-            case 3:
-            case 5:
-            case 8:
-            case 10:
+            case 4:
+            case 6:
+            case 9:
+            case 11:
                 return 30;
             default:
-                return 0;
+                return - 1;
         }
     }
 }
