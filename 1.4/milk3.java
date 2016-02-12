@@ -14,16 +14,10 @@ import java.util.StringTokenizer;
 
 import static java.lang.Math.min;
 
-/*
-* I want to give credit to TomConerly on github.
-* At https://github.com/TomConerly/Competition-Programming/blob/master/USACO/Chapter1/milk3.java
-* Thank you.
-*/
-
 public class milk3 {
 
-    private static int amax, bmax, cmax;
-    private static boolean[][][] seen;
+    private static int A, B, C;
+    private static boolean[][][] visit;
     private static List<Integer> ans;
 
     public static void main(String[] args) throws IOException {
@@ -31,55 +25,52 @@ public class milk3 {
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("milk3.out")));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        final int
-                A = Integer.parseInt(st.nextToken()),
-                B = Integer.parseInt(st.nextToken()),
-                C = Integer.parseInt(st.nextToken());
 
-        seen = new boolean[A + 1][B + 1][C + 1];
+        A = Integer.parseInt(st.nextToken());
+        B = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+
+        visit = new boolean[A + 1][B + 1][C + 1];
         ans = new ArrayList<Integer>();
 
-        amax = A;
-        bmax = B;
-        cmax = C;
-
-        recur(0, 0, cmax);
+        pour(0, 0, C);
 
         Collections.sort(ans);
-
-        boolean first = true;
-        for (Integer i : ans) {
-            if (first) pw.print(i);
-            else pw.print(" " + i);
-
-            first = false;
+        for (int i = 0; i < ans.size(); i++) {
+            if (i == ans.size() - 1)
+                pw.print(ans.get(i));
+            else
+                pw.print(ans.get(i) + " ");
         }
 
         pw.println();
         pw.close();
     }
 
-    public static void recur(int a, int b, int c) {
+    private static void pour(int a, int b, int c) {
 
-        if (seen[a][b][c]) return;
-        seen[a][b][c] = true;
+        if (visit[a][b][c]) return;
+        visit[a][b][c] = true;
 
         if (a == 0) ans.add(c);
 
-        //c to a
-        recur(a + min(c, amax - a), b, c - min(c, amax - a));
-        //a to c
-        recur(a - min(cmax - c, a), b, c + min(cmax - c, a));
+        // a -> b
+        pour(a - min(a, B - b), b + min(a, B - b), c);
 
-        //b to a
-        recur(a + min(b, amax - a), b - min(b, amax - a), c);
-        //a to b
-        recur(a - min(bmax - b, a), b + min(bmax - b, a), c);
+        // b -> a
+        pour(a + min(b, A - a), b - min(b, A - a), c);
 
-        //c to b
-        recur(a, b + min(c, bmax - b), c - min(c, bmax - b));
-        //b to c
-        recur(a, b - min(cmax - c, b), c + min(cmax - c, b));
+        // a -> c
+        pour(a - min(a, C - c), b, c + min(a, C - c));
+
+        // c -> a
+        pour(a + min(c, A - a), b, c - min(c, A - a));
+
+        // b -> c
+        pour(a, b - min(b, C - c), c + min(b, C - c));
+
+        // c -> b
+        pour(a, b + min(c, B - b), c - min(c, B - b));
 
     }
 
