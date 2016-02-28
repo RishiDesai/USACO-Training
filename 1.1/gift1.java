@@ -6,6 +6,7 @@ TASK: gift1
 package chapter1.sec1;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class gift1 {
@@ -33,37 +34,34 @@ public class gift1 {
             people[i] = new Person(name, init, list);
         }
 
-        for (Person giver : people) {
-            for (String name : giver.list) {
-                int i;
-                for (i = 0; i < people.length; i++)
-                    if (people[i].name.equals(name)) break;
+        Arrays.sort(people);
 
-                people[i].received += giver.each;
+        for (Person p : people) {
+            for (String s : p.list) {
+                int idx = find(people, s);
+                people[idx].received += p.each;
             }
-
         }
 
         for (String name : names) {
-            int i;
-            for (i = 0; i < people.length; i++)
-                if (name.equals(people[i].name)) {
-                    people[i].setDiff();
-                    break;
-                }
-
-            pw.println(people[i].name + " " + people[i].diff);
+            int idx = find(people, name);
+            pw.println(name + " " + people[idx].diff());
         }
 
         pw.close();
     }
 
-    private static class Person {
+    private static int find(Person[] people, String name) {
+        Person p = new Person(name, - 1, new String[0]);    // temp var for search
+        return Arrays.binarySearch(people, p);
+    }
 
-        protected final int init, each;
-        protected int received, diff;
-        protected final String name;
-        protected final String[] list;
+    private static class Person implements Comparable<Person> {
+
+        private final int init, each;
+        private final String name;
+        private final String[] list;
+        private int received;
 
         protected Person(String name, int init, String[] list) {
             this.init = init;
@@ -73,32 +71,13 @@ public class gift1 {
             this.received = (each == 0) ? init : init % list.length;
         }
 
-        protected void setDiff() {
-            this.diff = received - init;
+        private int diff() {
+            return received - init;
         }
 
         @Override
-        public String toString() {
-            return "[" + name + ": " + init + " : " + received + " ]";
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (! (o instanceof Person)) return false;
-
-            Person person = (Person) o;
-
-            return init == person.init && each == person.each && name.equals(person.name);
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = init;
-            result = 31 * result + each;
-            result = 31 * result + name.hashCode();
-            return result;
+        public int compareTo(Person p) {
+            return name.compareTo(p.name);
         }
 
     }
