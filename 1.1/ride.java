@@ -16,10 +16,7 @@ public class ride {
         final String comet = br.readLine();
         final String group = br.readLine();
 
-        int cometNum = getNumber(comet);
-        int groupNum = getNumber(group);
-
-        if (cometNum == groupNum)
+        if (solve(comet) == solve(group))
             pw.println("GO");
         else
             pw.println("STAY");
@@ -27,11 +24,10 @@ public class ride {
         pw.close();
     }
 
-    private static int getNumber(final String str) {
+    private static int solve(String str) {
         int ret = 1;
-
         for (int i = 0; i < str.length(); i++)
-            ret *= str.charAt(i) - 64;
+            ret *= str.charAt(i) - 'A' + 1;
 
         return ret % 47;
     }
