@@ -11,79 +11,80 @@ import java.util.Arrays;
 
 public class transform {
 
+    private static int N;
+    private static char[][] target;
+
     public static void main(String[] args) throws IOException {
-
-        /* filling in 2D char arrays */
         BufferedReader br = new BufferedReader(new FileReader("transform.in"));
-        PrintWriter pw = new PrintWriter(new File("transform.out"));
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("transform.out")));
 
-        final int N = Integer.parseInt(br.readLine());
+        N = Integer.parseInt(br.readLine());
 
-        char[][] original = new char[N][N];
-        for (int i = 0; i < original.length; i++) {
+        char[][] start = new char[N][N];
+        for (int i = 0; i < N; i++) {
             String line = br.readLine();
-            for (int j = 0; j < original[i].length; j++) {
-                original[i][j] = line.charAt(j);
+            for (int j = 0; j < N; j++) {
+                start[i][j] = line.charAt(j);
             }
         }
 
-        char[][] target = new char[N][N];
-        for (int i = 0; i < target.length; i++) {
+        target = new char[N][N];
+        for (int i = 0; i < N; i++) {
             String line = br.readLine();
-            for (int j = 0; j < target[i].length; j++) {
+            for (int j = 0; j < N; j++) {
                 target[i][j] = line.charAt(j);
             }
         }
 
-        /* deciding transformation */
-        if (Arrays.deepEquals(original, rotate(target)))
-            pw.println(1);
+        int ans;
 
-        else if (Arrays.deepEquals(target, rotate(rotate(original))))
-            pw.println(2);
+        if (E(rot(start)))
+            ans = 1;
 
-        else if (Arrays.deepEquals(target, rotate(rotate(rotate(original)))))
-            pw.println(3);
+        else if (E(rot(rot(start))))
+            ans = 2;
 
-        else if (Arrays.deepEquals(target, reflect(original)))
-            pw.println(4);
+        else if (E(rot(rot(rot(start)))))
+            ans = 3;
 
-        else if (Arrays.deepEquals(target, rotate(reflect(original))) ||
-                Arrays.deepEquals(target, rotate(rotate(reflect(original)))) ||
-                Arrays.deepEquals(target, rotate(rotate(rotate(reflect(original))))))
-            pw.println(5);
+        else if (E(refl(start)))
+            ans = 4;
 
-        else if (Arrays.deepEquals(target, original))
-            pw.println(6);
+        else if (E(rot(refl(start))) ||
+                E(rot(rot(refl(start)))) ||
+                E(rot(rot(rot(refl(start))))))
+            ans = 5;
+
+        else if (E(start))
+            ans = 6;
 
         else
-            pw.println(7);
+            ans = 7;
 
-
+        pw.println(ans);
         pw.close();
     }
 
-    private static void print(char[][] input) {
-        for (char[] i : input)
-            System.out.println(Arrays.toString(i));
+    private static char[][] rot(char[][] in) {  // 90 degrees rotation
+        char[][] out = new char[N][N];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                out[j][i] = in[N - i - 1][j];
+
+        return out;
     }
 
-    private static char[][] rotate(char[][] input) {  // 90 degrees
-        char[][] output = new char[input.length][input.length];
-        for (int i = 0; i < input.length; i++)
-            for (int j = 0; j < input[i].length; j++)
-                output[j][input.length - i - 1] = input[i][j];
+    private static char[][] refl(char[][] in) {  // reflection
+        char[][] out = new char[N][N];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                out[i][j] = in[i][N - j - 1];
 
-        return output;
+        return out;
     }
 
-    private static char[][] reflect(char[][] input) {
-        char[][] output = new char[input.length][input.length];
-        for (int i = 0; i < input.length; i++)
-            for (int j = 0; j < input[i].length; j++)
-                output[i][j] = input[i][input.length - j - 1];
-
-        return output;
+    private static boolean E(char[][] in) {    // made this function for concise 'if' statements above
+        return Arrays.deepEquals(target, in);  // tests that elements equal each other
     }
 
 }

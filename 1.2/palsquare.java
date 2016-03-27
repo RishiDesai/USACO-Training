@@ -18,8 +18,8 @@ public class palsquare {
 
         for (int i = 1; i <= 300; i++) {
 
-            String square = Integer.toString(i * i, B).toUpperCase();  // this is why I love java
-            String curr = Integer.toString(i, B).toUpperCase(); // toString() makes the letters lower case
+            String square = Integer.toString(i * i, B).toUpperCase();  // toString(i, b) converts 'i' (base 10) to base 'b'
+            String curr = Integer.toString(i, B).toUpperCase();        // toString() makes the letters lower case
 
             if (isPalindrome(square)) {
                 pw.println(curr + " " + square);

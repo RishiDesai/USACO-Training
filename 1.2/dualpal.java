@@ -18,7 +18,7 @@ public class dualpal {
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         final int N = Integer.parseInt(st.nextToken()); // times
-        int S = Integer.parseInt(st.nextToken()); // amount
+        int S = Integer.parseInt(st.nextToken()); // max
 
         int found = 0;
         while (found < N) {
@@ -40,7 +40,7 @@ public class dualpal {
         int count = 0;
         for (int i = 2; i <= 10; i++) {
 
-            String inBase = Integer.toString(n, i); // this is why I love java
+            String inBase = Integer.toString(n, i);  // toString(n, i) converts 'n' (base 10) to base 'i'
 
             if (isPalindrome(inBase))
                 count++;

@@ -15,22 +15,22 @@ import java.util.List;
 public class namenum {
 
     private static PrintWriter pw;
-    private static String input;
-    private static List<String> dict;
     private static char[][] keypad;
-    private static int count = 0; // if there are no names
+    private static List<String> dict;
+    private static String input;
+    private static boolean none = true;
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new FileReader("dict.txt"));
-        pw = new PrintWriter(new File("namenum.out"));
 
         dict = new ArrayList<String>();
         String line;
-        while ((line = br.readLine()) != null) dict.add(line.trim());
+        while ((line = br.readLine()) != null) dict.add(line);
 
         br = new BufferedReader(new FileReader("namenum.in"));
-        input = br.readLine().trim();
+        pw = new PrintWriter(new BufferedWriter(new FileWriter("namenum.out")));
+
+        input = br.readLine();     // input numbers
 
         keypad = new char[][]{
                 {},
@@ -45,28 +45,29 @@ public class namenum {
                 {'W', 'X', 'Y'}
         };
 
-        recur(0, new StringBuilder());
+        recur("");
 
-        if (count == 0) pw.println("NONE");
+        if (none) pw.println("NONE");
 
         pw.close();
     }
 
-    private static void recur(int ind, StringBuilder sb) {
-        if (sb.length() == input.length()) {
-            String str = sb.toString();
-            if (Collections.binarySearch(dict, str) > 0) {
-                pw.println(str);
-//                System.out.println(str);
-                count++;
+    private static void recur(String s) {        // StringBuilder isn't necessary here
+        if (s.length() == input.length()) {      // dfs
+
+            if (Collections.binarySearch(dict, s) >= 0) {
+                none = false;
+                pw.println(s);
             }
+
             return;
         }
 
-        int key = Integer.parseInt(input.charAt(ind) + "");
-        for (int i = 0; i < keypad[key].length; i++)
-            recur(ind + 1, new StringBuilder(sb).append(keypad[key][i]));
+        int key = Integer.parseInt(input.charAt(s.length()) + "");
 
+        for (int i = 0; i < keypad[key].length; i++) {
+            recur(s + keypad[key][i]);
+        }
     }
 
 }

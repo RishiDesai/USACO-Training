@@ -18,7 +18,7 @@ public class milk2 {
         final int N = Integer.parseInt(br.readLine());
 
         boolean[] time = new boolean[1000000 + 1];
-        int start = 1 << 30, end = - 1;
+        int start = Integer.MAX_VALUE, end = - 1;
 
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -26,7 +26,7 @@ public class milk2 {
             int low = Integer.parseInt(st.nextToken());
             int high = Integer.parseInt(st.nextToken());
 
-            for (int t = low; t < high; t++) {
+            for (int t = low; t < high; t++) {  // cows are milking
                 time[t] = true;
             }
 
@@ -34,8 +34,8 @@ public class milk2 {
             if (high > end) end = high;
         }
 
-        int maxIs = 0, maxNot = 0;
-        int is = 0, not = 0;
+        int is = 0, maxIs = 0;
+        int not = 0, maxNot = 0;
         for (int i = start; i < end; i++) {
 
             if (time[i]) {
@@ -45,9 +45,9 @@ public class milk2 {
                 not++;
                 is = 0;
             }
+
             if (is > maxIs) maxIs = is;
             if (not > maxNot) maxNot = not;
-
         }
 
         pw.println(maxIs + " " + maxNot);
