@@ -30,15 +30,14 @@ public class sprime {
 
         if (! isPrime(n)) return;
 
-        if (String.valueOf(n).length() == N)
+        if ((n + "").length() == N)
             pw.println(n);
 
         for (int i = 1; i <= 9; i += 2)
             search(10 * n + i);
-
     }
 
-    private static boolean isPrime(final int n) {
+    private static boolean isPrime(int n) {
         if (n == 2) return true;
         if (n % 2 == 0) return false;
 

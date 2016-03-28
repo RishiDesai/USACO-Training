@@ -17,17 +17,18 @@ public class numtri {
 
         final int N = Integer.parseInt(br.readLine());
 
-        int[][] tri = new int[N][N];
+        long[][] tri = new long[N][N];    // dp
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int j = 0; j <= i; j++)
                 tri[i][j] = Integer.parseInt(st.nextToken());
         }
 
-        for (int i = N - 2; i >= 0; i--)
-            for (int j = 0; j <= i; j++)
+        for (int i = N - 2; i >= 0; i--) {
+            for (int j = 0; j <= i; j++) {
                 tri[i][j] += Math.max(tri[i + 1][j], tri[i + 1][j + 1]);
-
+            }
+        }
 
         pw.println(tri[0][0]);
         pw.close();
