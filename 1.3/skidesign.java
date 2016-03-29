@@ -13,7 +13,7 @@ public class skidesign {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("skidesign.in"));
-        PrintWriter pw = new PrintWriter(new File("skidesign.out"));
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("skidesign.out")));
 
         final int N = Integer.parseInt(br.readLine());
 
@@ -22,8 +22,7 @@ public class skidesign {
 
         Arrays.sort(hills);
 
-        int sum = 1 << 30;   // because Integer.MAX_VALUE is overrated
-
+        int sum = Integer.MAX_VALUE;
         for (int min = 0; min <= 100; min++) {
 
             int tempSum = 0;
@@ -39,7 +38,7 @@ public class skidesign {
 
             }
 
-            if (tempSum < sum) sum = tempSum;  // because Math.min() is overrated
+            if (tempSum < sum) sum = tempSum;
         }
 
         pw.println(sum);

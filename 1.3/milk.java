@@ -50,9 +50,9 @@ public class milk {
 
     private static class Farmer implements Comparable<Farmer> { // immutable
 
-        protected final int price, max;
+        final int price, max;
 
-        protected Farmer(int price, int max) {
+        Farmer(int price, int max) {
             this.price = price;
             this.max = max;
         }

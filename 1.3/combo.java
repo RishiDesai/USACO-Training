@@ -40,7 +40,7 @@ public class combo {
 
 
         pw.println(ans);
-        pw.close(); // only nerds close the read file object
+        pw.close();
     }
 
     private static boolean close(int a, int b, int c, int[] key) {

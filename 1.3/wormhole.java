@@ -27,8 +27,7 @@ public class wormhole {
 
         N = Integer.parseInt(br.readLine());
 
-        int[] x = new int[N];
-        int[] y = new int[N];
+        int[] x = new int[N], y = new int[N];
         adjacent = new int[N];
         pairings = new int[N];
 
@@ -90,7 +89,6 @@ public class wormhole {
             }
 
             if (idx >= 0) return true;
-
         }
 
         return false;
