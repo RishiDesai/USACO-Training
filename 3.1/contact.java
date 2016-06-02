@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.*;
 
 public class contact {
-    
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("contact.in"));
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("contact.out")));
@@ -25,104 +25,103 @@ public class contact {
 
         StringBuilder sb = new StringBuilder(br.readLine());
 
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
+        String ln;
+        while ((ln = br.readLine()) != null) {
+            sb.append(ln);
         }
 
         row = sb.toString();
+        Map<String, Integer> FtoC = new TreeMap<String, Integer>();
+        // FtoC = Frequency maps to Count
 
-        /* search string */
-        Map<String, Integer> pat = new HashMap<String, Integer>();
         for (int i = 0; i < row.length(); i++) {
 
             sb = new StringBuilder();
-            for (int j = i; j <= Math.min(i + B, row.length() - 1); j++) {
+
+            for (int j = i; j < row.length(); j++) {
 
                 sb.append(row.charAt(j));
-                String str = sb.toString();
 
-                if (str.length() >= A && str.length() <= B) {
+                if (sb.length() >= A && sb.length() <= B) {
 
-                    int uses = 1;
-                    if (pat.containsKey(str)) {
-                        uses += pat.get(str);
-                    }
+                    String freq = sb.toString();
 
-                    pat.put(str, uses);
+                    int count = (FtoC.get(freq) == null) ? 1 : FtoC.get(freq) + 1;
+                    // check if freq was counted already, if it was,
+                    // then increment the prev. value
+
+                    FtoC.put(freq, count);
+
+                } else if (sb.length() > B) {
+                    break;   // too long
                 }
 
-                if (str.length() > B) break;
             }
+
         }
 
-        int longest = 0;
-        List<Pair> ans = new ArrayList<Pair>();
-        for (Map.Entry<String, Integer> e : pat.entrySet()) {     // yes, java can be ugly
-            if (e.getValue() > longest) longest = e.getValue();
+        // CtoL = Count maps to List(of frequencies in sorted order)
+        Map<Integer, List<String>> CtoL = new TreeMap<Integer, List<String>>();
+        // here, I'm switching the key-val mapping, from Str -> Int to Int -> Str
+        // this is all so I can print out the answer properly
 
-            ans.add(new Pair(e.getValue(), e.getKey()));
+        for (Map.Entry<String, Integer> entry : FtoC.entrySet()) {
+
+            String freq = entry.getKey();
+            int count = entry.getValue();
+
+            if (CtoL.get(count) == null)
+                CtoL.put(count, new ArrayList<String>());
+
+            CtoL.get(count).add(freq);
         }
 
-        Collections.sort(ans);
+        // now, we have to sort the individual lists by the output rules
+        for (Map.Entry<Integer, List<String>> entry : CtoL.entrySet()) {
 
-        @SuppressWarnings("unchecked")
-        ArrayList<String>[] ret = new ArrayList[longest + 1];
+            List<String> freqs = entry.getValue();
 
-        for (int i = 0; i < ret.length; i++) ret[i] = new ArrayList<String>();
-
-        for (Pair p : ans) {
-            ret[p.idx].add(p.str);
-        }
-
-        /* printing the answer - the hard part */
-        int done = 0;
-        for (int i = longest; i >= 0; i--) {
-            if (ret[i].size() == 0) continue;
-
-            pw.println(i);
-
-            Collections.sort(ret[i], new Comparator<String>() {
+            Collections.sort(freqs, new Comparator<String>() {
 
                 public int compare(String s1, String s2) {
-                    if (s1.length() > s2.length()) return 1;
-                    if (s1.length() < s2.length()) return - 1;
-                    return Integer.parseInt(s1, 2) - Integer.parseInt(s2, 2);
-                }
 
+                    if (s1.length() != s2.length()) {
+                        return s1.length() - s2.length();
+                    }
+
+                    int n1 = Integer.parseInt(s1, 2); // 2 is for parsing base 2
+                    int n2 = Integer.parseInt(s2, 2);
+
+                    return n1 - n2;
+                }
             });
 
-            pw.print(ret[i].get(0));
-            for (int j = 1; j < ret[i].size(); j++) {
-                if (j % 6 == 0)
-                    pw.print('\n' + ret[i].get(j));
-                else
-                    pw.print(" " + ret[i].get(j));
+        }
+
+        List<Integer> keys = new ArrayList<Integer>(CtoL.keySet());
+
+        // go backwards in descending order
+        for (int i = keys.size() - 1; i >= keys.size() - N && i >= 0; i--) {
+            int count = keys.get(i);
+            List<String> freqs = CtoL.get(count);
+
+            pw.println(count);
+
+            String line = "";
+            for (int k = 0; k < freqs.size(); k++) {
+
+                if (k % 6 == 0 && k != 0) {   // only 6 frequencies per line
+                    pw.println(line.trim());  // trim() gets rid of trailing whitespace
+                    line = "";
+                }
+
+                line += freqs.get(k) + " ";
             }
 
-            pw.println();
-
-            done++;
-            if (done == N) break;
+            pw.println(line.trim());
         }
 
         pw.close();
     }
 
-    private static class Pair implements Comparable<Pair> {    // immutable
-
-        private final int idx;
-        private final String str;
-
-        protected Pair(int idx, String str) {
-            this.idx = idx;
-            this.str = str;
-        }
-
-        public int compareTo(Pair p) {   // reverse
-            return p.idx - idx;
-        }
-
-    }
-    
 }
